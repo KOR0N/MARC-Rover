@@ -1,0 +1,7 @@
+    t_queue myqueue = createQueue(9);
+    for(int i=0;i<9;i++){
+        choose = rand() % 8-0;
+
+        if
+        enqueue();
+    }
