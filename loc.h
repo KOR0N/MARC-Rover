@@ -53,6 +53,14 @@ t_localisation loc_init(int, int, t_orientation);
 int isValidLocalisation(t_position, int, int);
 
 /**
+ * @brief Function to generate random localisation on the map
+ * @param x_map : the maximum x position of the map
+ * @param y_map : the maximum y position of the map
+ * @return the localisation
+ */
+t_localisation GenerateRandomLocalisation(int x_map, int y_map);
+
+/**
  * @brief get the LEFT position of a position
  * @param pos : the position
  * @return the LEFT position

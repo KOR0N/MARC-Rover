@@ -36,11 +36,35 @@ typedef struct s_map
 } t_map;
 
 /**
+ * @brief Function to generate a map
+ * @param x, y : the size of the map
+ * @return the map
+ */
+char* GenerateMap(int x, int y);
+
+
+
+
+/**
  * @brief Function to initialise the map from a file
  * @param filename : the name of the file
  * @return the map
  */
 t_map createMapFromFile(char *);
+
+/**
+ * @brief Function to initialise the map from a char
+ * @param mapChar : the name of the map
+ * @return the map
+ */
+t_map createMapFromChar(char *, int x, int y);
+
+/**
+ * @brief Function that generates terrain based on probability
+ * @param void
+ * @return int corresponding to a type of terrain
+ */
+int GetSoil();
 
 /**
  * @brief Function to create a standard training map (11x11 with only plains and base station in the middle)
@@ -54,5 +78,6 @@ t_map createMapFromFile(char *);
  * @param map : the map to display
  */
 void displayMap(t_map);
+
 
 #endif //UNTITLED1_MAP_H

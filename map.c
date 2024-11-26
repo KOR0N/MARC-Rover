@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "map.h"
 #include "loc.h"
 #include "queue.h"
@@ -246,6 +247,102 @@ t_map createMapFromFile(char *filename)
     removeFalseCrevasses(map);
     return map;
 }
+
+t_map createMapFromChar(char *mapChar,int x, int y)
+{
+    int xdim = x, ydim = y;
+    char *file = mapChar;
+
+    if (file == NULL)
+    {
+        fprintf(stderr, "Error: Map is not valid %s\n");
+        exit(1);
+    }
+
+    t_map map;
+
+
+    map.x_max = xdim;
+    map.y_max = ydim;
+    map.soils = (t_soil **)malloc(ydim * sizeof(t_soil *));
+    for (int i = 0; i < ydim; i++)
+    {
+        map.soils[i] = (t_soil *)malloc(xdim * sizeof(t_soil));
+    }
+    map.costs = (int **)malloc(ydim * sizeof(int *));
+    for (int i = 0; i < ydim; i++)
+    {
+        map.costs[i] = (int *)malloc(xdim * sizeof(int));
+    }
+    int index = 0;
+    for (int i = 0; i < ydim; i++)
+    {
+
+        // parse the line to get the values : 0 = BASE_STATION, 1 = PLAIN, 2 = ERG, 3 = REG, 4 = CREVASSE
+        // values are separated by spaces, so we use sscanf with %d to get the values
+        for (int j = 0; j < xdim; j++)
+        {
+            int value;
+            value = mapChar[index++]-'0';
+            map.soils[i][j] = value;
+            // cost is 0 for BASE_STATION, 65535 for other soils
+            map.costs[i][j] = (value == BASE_STATION) ? 0 : COST_UNDEF;
+            index++;
+        }
+
+    }
+    calculateCosts(map);
+    removeFalseCrevasses(map);
+    return map;
+}
+
+char* GenerateMap(int x, int y){
+    // Calcul de la taille totale de la chaîne
+    int size = y * (x * 2) + y + 1;
+    char *map = malloc(size * sizeof(char));
+
+    if (map == NULL) {
+        return NULL;
+    }
+
+    // Générateur aléatoire de cases, sinon rand prend toujours la même seed et génére ainsi le même nombre tant qu'on n'a pas relancé notre IDE
+    srand(time(NULL));
+
+    // Station aléatoire
+    int base_x = rand() % x;
+    int base_y = rand() % y;
+    int index = 0;
+
+    // Construction de la map
+    for (int i = 0; i < y; i++) {
+        for (int j = 0; j < x; j++) {
+            if (i == base_y && j == base_x) {
+                map[index++] = '0';  // Créer la base
+            } else {
+                int soil = GetSoil();  // Génère 1 à 4 pour les types de terrain
+                map[index++] = soil + '0';   // Conversion en caractère
+            }
+            map[index++] = ' ';  // Séparateur
+        }
+        map[index - 1] = '\n';  // Retour à la ligne
+    }
+    map[index - 1] = '\0';  // Fin de la chaîne
+
+    return map;
+}
+
+int GetSoil(){
+    int const probabilities[] = {57,20,15,8};
+    int sum = probabilities[0];
+    int val = rand() %(100);
+    for (int i=0;i<4;i++){
+        if (val<sum) {
+            return i+1;
+        }
+        else sum+=probabilities[i + 1];
+    }
+}
+
 
 t_map createTrainingMap()
 {

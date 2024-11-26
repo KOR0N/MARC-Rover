@@ -53,6 +53,7 @@ t_localisation translate(t_localisation loc, t_move move)
      *  - the origin (x=0, y=0) is at the top left corner
      */
     t_position res=loc.pos;
+
     switch (move) {
         case F_10:
             switch (loc.ori) {
@@ -134,34 +135,32 @@ t_localisation translate(t_localisation loc, t_move move)
 }
 
 
-void print_move(t_move *move) {
-    for(int i =0; i<9; i++){
-        switch (move[i]) {
-            case F_10:
-                printf("Avancer de 10 m\n");
-                break;
-            case F_20:
-                printf("Avancer de 20 m\n");
-                break;
-            case F_30:
-                printf("Avancer de 30 m\n");
-                break;
-            case B_10:
-                printf("Reculer de 10 m\n");
-                break;
-            case T_LEFT:
-                printf("Tourner a gauche\n");
-                break;
-            case T_RIGHT:
-                printf("Tourner a droite\n");
-                break;
-            case U_TURN:
-                printf("Demi-tour\n");
-                break;
-            default:
-                printf("z\n");
-                break;
-        }
+void print_move(t_move type_move) {
+    switch(type_move){
+        case F_10:
+            printf("Avancer de 10 m\n");
+            break;
+        case F_20:
+            printf("Avancer de 20 m\n");
+            break;
+        case F_30:
+            printf("Avancer de 30 m\n");
+            break;
+        case B_10:
+            printf("Reculer de 10 m\n");
+            break;
+        case T_LEFT:
+            printf("Tourner a gauche\n");
+            break;
+        case T_RIGHT:
+            printf("Tourner a droite\n");
+            break;
+        case U_TURN:
+            printf("Demi-tour\n");
+            break;
+        default:
+            printf("Ne pas bouger\n");
+            break;
     }
 }
 
@@ -213,4 +212,21 @@ t_move *getRandomMoves(int N)
         moves[i] = (t_move )type;
     }
     return moves;
+}
+
+t_move Erg(t_move move){
+    switch(move){
+        case F_10:
+            return STAY;
+        case F_20:
+            return F_10;
+        case F_30:
+            return F_20;
+        case B_10:
+            return STAY;
+        case U_TURN:
+            return (rand() % 2 == 0) ? T_LEFT : T_RIGHT;
+        default:
+            return move;
+    }
 }
